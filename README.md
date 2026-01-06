@@ -97,17 +97,12 @@ js-analyzer --pretty --verbose --no-recursive bundle/
 
 ### Output Formats
 
-**JSON (default):**
+**TOON (default):**
 ```bash
-js-analyzer --pretty app.js
+js-analyzer app.js
 ```
 
-**TOON (Token-Oriented Object Notation):**
-```bash
-js-analyzer --format=toon app.js
-```
-
-TOON format is optimized for Large Language Models (LLMs) with:
+TOON format is the default output, optimized for Large Language Models (LLMs) with:
 - ~40-50% fewer tokens than JSON (typically 50% smaller file size)
 - Tabular arrays for compact representation
 - Human-readable structure
@@ -128,6 +123,14 @@ findings:
 ```
 
 Learn more: [TOON Format](https://github.com/toon-format/toon)
+
+**JSON (optional):**
+```bash
+js-analyzer --format=json app.js
+
+# With pretty printing
+js-analyzer --format=json --pretty app.js
+```
 
 ### Help & Version
 

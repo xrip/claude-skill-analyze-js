@@ -1,3 +1,4 @@
+
 ---
 name: analyze-js
 description: Analyze JavaScript files and directories for API endpoints, secrets, URLs, emails, and sensitive file references
@@ -34,8 +35,8 @@ When the user requests to analyze JavaScript files:
 1. Identify the paths (files or directories) to analyze
 2. Determine if any special flags are needed:
    - `--verbose` - Show detailed progress
-   - `--pretty` - Pretty print JSON output
-   - `--format=toon` - Use TOON format (optimized for LLMs, 50% smaller)
+   - `--format=json` - Use JSON format instead of default TOON
+   - `--pretty` - Pretty print JSON output (only with --format=json)
    - `--no-recursive` - Don't scan directories recursively
 3. Run: `bun bin/cli.js [flags] <paths>`
 4. Parse and present the results to the user
@@ -46,20 +47,23 @@ When the user requests to analyze JavaScript files:
 - Recursive by default
 
 **Output Formats:**
-- `json` (default) - Full JSON with all details
-- `toon` - Compact format optimized for LLMs (40-50% fewer tokens)
+- `toon` (default) - Compact format optimized for LLMs (40-50% fewer tokens)
+- `json` - Full JSON with all details (use --format=json) 
 
 ## Example Commands
 
 ```bash
-# Analyze single file
+# Analyze single file (TOON format by default)
 bun bin/cli.js bundle.js
 
-# Analyze directory with TOON format
-bun bin/cli.js --format=toon src/
+# Analyze directory
+bun bin/cli.js src/
 
 # Verbose analysis of multiple directories
-bun bin/cli.js --verbose --pretty frontend/ backend/
+bun bin/cli.js --verbose frontend/ backend/
+
+# JSON format with pretty print
+bun bin/cli.js --format=json --pretty src/
 
 # Non-recursive scan
 bun bin/cli.js --no-recursive build/

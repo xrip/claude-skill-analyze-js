@@ -76,20 +76,21 @@ OPTIONS:
   -h, --help           Show this help message
   -v, --version        Show version
   --verbose            Show detailed analysis progress
-  --pretty             Pretty print JSON output
-  --format=FORMAT      Output format: json (default), toon
+  --pretty             Pretty print JSON output (only for JSON format)
+  --format=FORMAT      Output format: toon (default), json
   --no-recursive       Don't scan directories recursively
 
 EXAMPLES:
-  js-analyzer app.js                    # Analyze single file
+  js-analyzer app.js                    # Analyze single file (TOON format)
   js-analyzer src/                      # Analyze all JS files in src/
   js-analyzer dist/ lib/                # Analyze multiple directories
   js-analyzer --no-recursive src/       # Only top-level files in src/
-  js-analyzer --pretty --verbose dist/  # Verbose with pretty output
-  js-analyzer --format=toon src/        # Output in TOON format
+  js-analyzer --verbose dist/           # Verbose with TOON output
+  js-analyzer --format=json --pretty src/  # JSON format with pretty print
 
 OUTPUT:
-  JSON format with findings grouped by category
+  TOON format by default (compact, LLM-optimized)
+  Use --format=json for JSON output
   `.trim());
 }
 
@@ -117,7 +118,7 @@ async function main() {
   let verbose = false;
   let pretty = false;
   let recursive = true;
-  let format = 'json';
+  let format = 'toon'; // Default to TOON format
 
   for (const arg of args) {
     if (arg === '-h' || arg === '--help') {
