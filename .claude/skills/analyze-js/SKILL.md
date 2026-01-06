@@ -56,6 +56,12 @@ When the user requests to analyze JavaScript files:
 - Skips `node_modules/` and hidden directories
 - Recursive by default
 
+**Quick Summary:**
+When presenting results to the user, start with the summary statistics:
+- Total findings
+- Count by category (endpoints, secrets, urls, emails, files, bundlers)
+- Highlight critical items (secrets, admin endpoints)
+
 **Output Formats:**
 - `toon` (default) - Compact format optimized for LLMs (40-50% fewer tokens)
 - `json` - Full JSON with all details (use --format=json) 
@@ -81,39 +87,81 @@ npx js-analyzer-cli --no-recursive build/
 
 ## Output Structure
 
+The tool outputs results in TOON format by default (use `--format=json` for JSON).
+
+**TOON Format Example (default):**
+```
+__comment: "JS Analyzer Results - Generated: 2026-01-06T20:15:32.456Z"
+summary:
+  total: 18
+  endpoints: 4
+  urls: 2
+  secrets: 1
+  emails: 0
+  files: 1
+  bundlers: 10
+files[1	]{path	status	findings}:
+  bundle.js	analyzed	18
+findings:
+  endpoints[4	]{value	source	line	column}:
+    /api/v1/users	bundle.js	42	15
+    /api/v1/posts	bundle.js	58	23
+    /oauth/token	bundle.js	105	18
+    /admin/dashboard	bundle.js	234	12
+  urls[2	]{value	source	line	column}:
+    https://api.example.com/data	bundle.js	89	20
+    https://cdn.example.com/assets	bundle.js	156	34
+  secrets[1	]{value	source	line	column}:
+    AKIAIOSFOD...MPLE (AWS Key)	bundle.js	312	25
+  emails[0	]:
+  files[1	]{value	source	line	column}:
+    config.json	bundle.js	67	19
+  bundlers[10	]{value	source	line	column}:
+    Webpack 5.88.2	bundle.js	1	15
+    Webpack (detected)	bundle.js	3	5
+```
+
+**Key features:**
+- Tab-delimited columns (`\t` separator)
+- Explicit array lengths for easy parsing
+- 40-50% fewer tokens than JSON
+- Human-readable structure
+- Includes position (line:column) for navigation
+
 Each finding includes:
-- **category**: endpoints, urls, secrets, emails, files, or bundlers
-- **value**: The detected value
+- **value**: The detected item
 - **source**: Source file path
-- **position**: Line and column number (1-indexed)
+- **line**: Line number (1-indexed)
+- **column**: Column number (1-indexed)
 
-Example:
-```json
-{
-  "category": "endpoints",
-  "value": "/api/v1/users",
-  "source": "app.js",
-  "position": {
-    "line": 42,
-    "column": 15
-  }
-}
+**Presenting Results to User:**
+
+Format findings in a clear, actionable way:
+
+```
+📊 Analysis Results for bundle.js
+
+Summary:
+- Total findings: 18
+- Endpoints: 4 (including /admin/dashboard ⚠️)
+- Secrets: 1 (AWS Key - masked)
+- Bundlers: Webpack 5.88.2
+
+🔴 Critical Findings:
+• AWS Key detected at line 312
+• Admin endpoint /admin/dashboard at line 234
+
+📍 API Endpoints (4):
+• /api/v1/users (line 42)
+• /api/v1/posts (line 58)
+• /oauth/token (line 105)
+• /admin/dashboard (line 234)
+
+🔧 Build Info:
+• Webpack 5.88.2 detected
 ```
 
-Bundler detection example:
-```json
-{
-  "category": "bundlers",
-  "value": "Webpack 5.88.2",
-  "source": "bundle.js",
-  "position": {
-    "line": 1,
-    "column": 25
-  }
-}
-```
-
-Position info allows easy navigation: `app.js:42:15`
+Use position info for navigation: `bundle.js:42:15`
 
 ## Security Note
 
