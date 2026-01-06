@@ -14,27 +14,35 @@ Command-line tool for analyzing JavaScript files to find API endpoints, secrets,
 
 ## Installation
 
-### Local Usage (Bun required)
+### Option 1: Use with bunx (Recommended)
+
+Run directly without installation:
+```bash
+bunx js-analyzer-cli <files>
+```
+
+### Option 2: Global Installation
 
 ```bash
-# Clone or copy the project
-cd tools
+# Install globally
+bun install -g js-analyzer-cli
 
-# Make CLI executable
-chmod +x bin/cli.js
+# Use anywhere
+js-analyzer <files>
+```
+
+### Option 3: Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/js-analyzer-cli.git
+cd js-analyzer-cli
 
 # Run directly
 bun bin/cli.js <files>
-```
 
-### NPM Package (optional)
-
-```bash
-# Install locally
-npm install -g .
-
-# Use globally
-js-analyzer <files>
+# Or install locally
+bun install -g .
 ```
 
 ### Requirements

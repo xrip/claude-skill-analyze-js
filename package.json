@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "JavaScript analyzer for finding API endpoints, secrets, URLs, and sensitive data",
   "type": "module",
+  "main": "./lib/analyzer.js",
   "bin": {
     "js-analyzer": "./bin/cli.js"
   },
+  "files": [
+    "bin/",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "bun test"
   },
@@ -15,12 +22,24 @@
     "javascript",
     "api-endpoints",
     "secrets",
-    "pentesting"
+    "pentesting",
+    "toon",
+    "llm",
+    "static-analysis"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/js-analyzer-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/js-analyzer-cli/issues"
+  },
+  "homepage": "https://github.com/yourusername/js-analyzer-cli#readme",
   "author": "",
   "license": "MIT",
   "engines": {
     "bun": ">=1.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "preferGlobal": true
 }

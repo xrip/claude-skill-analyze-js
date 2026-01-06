@@ -2,31 +2,31 @@
 
 ## Installation
 
-### Option 1: Global Installation (Recommended)
+### Option 1: bunx (No Installation Required)
+
+Run directly with bunx:
+```bash
+bunx js-analyzer-cli <files>
+```
+
+### Option 2: Global Installation
 
 ```bash
-# From project directory
-npm install -g .
+# Install globally with bun
+bun install -g js-analyzer-cli
 
 # Now use anywhere
 js-analyzer <files>
 ```
 
-### Option 2: NPX Usage (No Installation)
+### Option 3: Local Development
 
 ```bash
-# Run directly with npx
-npx js-analyzer-cli <files>
-```
-
-### Option 3: Direct Execution
-
-```bash
-# Make executable
-chmod +x bin/cli.js
-
-# Run with bun
+# From project directory
 bun bin/cli.js <files>
+
+# Or install locally
+bun install -g .
 ```
 
 ## Quick Examples

@@ -1,0 +1,31 @@
+# Development files
+.git/
+.github/
+.beads/
+.claude/
+
+# Test files
+test-*.js
+example-*.js
+test-dir/
+
+# Output files
+*.toon
+output.json
+
+# Development configs
+.gitignore
+.editorconfig
+
+# Documentation (already in files list)
+QUICKSTART.md
+
+# Python source (original)
+*.py
+ui/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
