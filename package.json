@@ -1,0 +1,26 @@
+{
+  "name": "js-analyzer-cli",
+  "version": "1.0.0",
+  "description": "JavaScript analyzer for finding API endpoints, secrets, URLs, and sensitive data",
+  "type": "module",
+  "bin": {
+    "js-analyzer": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "keywords": [
+    "security",
+    "analysis",
+    "javascript",
+    "api-endpoints",
+    "secrets",
+    "pentesting"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {}
+}
