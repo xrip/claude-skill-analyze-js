@@ -40,6 +40,8 @@
   "engines": {
     "bun": ">=1.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@toon-format/toon": "^2.1.0"
+  },
   "preferGlobal": true
 }

@@ -119,7 +119,8 @@ js-analyzer app.js
 
 **Benefits of TOON:**
 - 40-50% fewer tokens than JSON
-- Compact tabular arrays
+- Tab-delimited tabular arrays for optimal tokenization
+- Official `@toon-format/toon` library
 - Easy for LLMs to parse
 - Human-readable
 - **Default output format**
@@ -132,8 +133,8 @@ summary:
   endpoints: 1
 
 findings:
-  endpoints[1]{value,source,line,column}:
-    /api/v1/users,app.js,5,12
+  endpoints[1	]{value	source	line	column}:
+    /api/v1/users	app.js	5	12
 ```
 
 Read more: [TOON Format Specification](https://github.com/toon-format/toon)

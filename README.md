@@ -112,9 +112,10 @@ js-analyzer app.js
 
 TOON format is the default output, optimized for Large Language Models (LLMs) with:
 - ~40-50% fewer tokens than JSON (typically 50% smaller file size)
-- Tabular arrays for compact representation
+- Tab-delimited tabular arrays for optimal tokenization
 - Human-readable structure
 - Explicit array lengths
+- Official `@toon-format/toon` library
 
 Example TOON output:
 ```toon
@@ -125,9 +126,9 @@ summary:
   urls: 1
 
 findings:
-  endpoints[4]{value,source,line,column}:
-    /api/v1/users,app.js,5,12
-    /graphql,app.js,9,14
+  endpoints[4	]{value	source	line	column}:
+    /api/v1/users	app.js	5	12
+    /graphql	app.js	9	14
 ```
 
 Learn more: [TOON Format](https://github.com/toon-format/toon)
