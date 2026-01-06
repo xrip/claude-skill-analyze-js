@@ -99,40 +99,40 @@ summary:
   secrets: 1
   emails: 0
   files: 1
-  bundlers: 10
+  bundlers: 2
 files[1	]{path	status	findings}:
   bundle.js	analyzed	18
 findings:
-  endpoints[4	]{value	source	line	column}:
-    /api/v1/users	bundle.js	42	15
-    /api/v1/posts	bundle.js	58	23
-    /oauth/token	bundle.js	105	18
-    /admin/dashboard	bundle.js	234	12
-  urls[2	]{value	source	line	column}:
-    https://api.example.com/data	bundle.js	89	20
-    https://cdn.example.com/assets	bundle.js	156	34
-  secrets[1	]{value	source	line	column}:
-    AKIAIOSFOD...MPLE (AWS Key)	bundle.js	312	25
+  endpoints[4	]{value	location}:
+    /api/v1/users	bundle.js:42:15
+    /api/v1/posts	bundle.js:58:23
+    /oauth/token	bundle.js:105:18
+    /admin/dashboard	bundle.js:234:12
+  urls[2	]{value	location}:
+    https://api.example.com/data	bundle.js:89:20
+    https://cdn.example.com/assets	bundle.js:156:34
+  secrets[1	]{value	location}:
+    AKIAIOSFOD...MPLE (AWS Key)	bundle.js:312:25
   emails[0	]:
-  files[1	]{value	source	line	column}:
-    config.json	bundle.js	67	19
-  bundlers[10	]{value	source	line	column}:
-    Webpack 5.88.2	bundle.js	1	15
-    Webpack (detected)	bundle.js	3	5
+  files[1	]{value	location}:
+    config.json	bundle.js:67:19
+  bundlers[2	]{value	location}:
+    Webpack 5.88.2	bundle.js:1:15
+    Webpack (detected)	bundle.js:3:5
 ```
 
 **Key features:**
+- **Location format**: `file:line:column` - easy to parse and click
 - Tab-delimited columns (`\t` separator)
 - Explicit array lengths for easy parsing
 - 40-50% fewer tokens than JSON
 - Human-readable structure
-- Includes position (line:column) for navigation
 
 Each finding includes:
 - **value**: The detected item
-- **source**: Source file path
-- **line**: Line number (1-indexed)
-- **column**: Column number (1-indexed)
+- **location**: File path with position in format `file:line:column`
+
+This format is universally recognized by IDEs and text editors for navigation.
 
 **Presenting Results to User:**
 
@@ -148,20 +148,20 @@ Summary:
 - Bundlers: Webpack 5.88.2
 
 🔴 Critical Findings:
-• AWS Key detected at line 312
-• Admin endpoint /admin/dashboard at line 234
+• AWS Key detected at bundle.js:312:25
+• Admin endpoint /admin/dashboard at bundle.js:234:12
 
 📍 API Endpoints (4):
-• /api/v1/users (line 42)
-• /api/v1/posts (line 58)
-• /oauth/token (line 105)
-• /admin/dashboard (line 234)
+• /api/v1/users (bundle.js:42:15)
+• /api/v1/posts (bundle.js:58:23)
+• /oauth/token (bundle.js:105:18)
+• /admin/dashboard (bundle.js:234:12)
 
 🔧 Build Info:
-• Webpack 5.88.2 detected
+• Webpack 5.88.2 detected at bundle.js:1:15
 ```
 
-Use position info for navigation: `bundle.js:42:15`
+Use `file:line:column` format for easy navigation in any IDE or editor.
 
 ## Security Note
 
