@@ -1,13 +1,14 @@
 ---
 name: analyze-js
-description: Analyze JavaScript files for API endpoints, secrets, URLs, emails, and sensitive file references
+description: Analyze JavaScript files and directories for API endpoints, secrets, URLs, emails, and sensitive file references
 examples:
   - analyze-js bundle.js
-  - analyze-js src/app.js dist/vendor.js
-  - analyze-js --verbose main.js
+  - analyze-js src/
+  - analyze-js dist/ lib/
+  - analyze-js --verbose --no-recursive build/
 ---
 
-Analyzes JavaScript files for security-relevant information:
+Analyzes JavaScript files and directories for security-relevant information:
 - **API Endpoints**: REST APIs, GraphQL, OAuth paths, admin panels
 - **URLs**: External links, cloud storage URLs, WebSocket connections
 - **Secrets**: API keys, tokens, JWT, private keys, database credentials
@@ -19,13 +20,24 @@ The tool filters out common noise (build artifacts, module imports, XML namespac
 ## Usage
 
 ```bash
-js-analyzer [OPTIONS] <files...>
+js-analyzer [OPTIONS] <paths...>
 ```
+
+**Paths can be:**
+- Individual files: `app.js`
+- Directories: `src/` (scanned recursively by default)
+- Multiple paths: `frontend/ backend/ utils.js`
+
+**Directory Scanning:**
+- Automatically finds `.js`, `.jsx`, `.mjs` files
+- Skips `node_modules/` and hidden directories
+- Use `--no-recursive` to scan only top-level files
 
 ## Options
 
-- `--verbose` - Show detailed progress during analysis
+- `--verbose` - Show detailed progress and file count during analysis
 - `--pretty` - Pretty print JSON output for readability
+- `--no-recursive` - Don't scan directories recursively (top-level files only)
 - `-h, --help` - Show help message
 - `-v, --version` - Show version
 
@@ -61,14 +73,19 @@ Analyze a single bundled JS file:
 analyze-js dist/bundle.js
 ```
 
-Analyze multiple files with verbose output:
+Analyze entire directory recursively:
 ```bash
-analyze-js --verbose --pretty src/app.js src/config.js
+analyze-js src/
 ```
 
-Use in Claude Code to analyze downloaded JS:
+Analyze multiple directories:
 ```bash
-curl -s https://example.com/app.js | analyze-js /dev/stdin
+analyze-js --verbose --pretty frontend/ backend/
+```
+
+Non-recursive directory scan:
+```bash
+analyze-js --no-recursive build/
 ```
 
 ## Security Note

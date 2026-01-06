@@ -51,26 +51,45 @@ curl -fsSL https://bun.sh/install | bash
 ### Basic Usage
 
 ```bash
+# Analyze a single file
 js-analyzer file.js
+
+# Analyze a directory (recursive)
+js-analyzer src/
+
+# Analyze multiple paths
+js-analyzer dist/ lib/ app.js
 ```
 
-### Multiple Files
+### Directory Scanning
+
+The tool automatically:
+- Scans directories recursively by default
+- Finds all `.js`, `.jsx`, `.mjs` files
+- Skips `node_modules/` and hidden directories (`.git/`, etc.)
 
 ```bash
-js-analyzer app.js vendor.js bundle.js
+# Recursive scan (default)
+js-analyzer src/
+
+# Non-recursive (only top-level files)
+js-analyzer --no-recursive src/
+
+# Multiple directories
+js-analyzer frontend/ backend/
 ```
 
 ### With Options
 
 ```bash
 # Pretty print JSON output
-js-analyzer --pretty dist/main.js
+js-analyzer --pretty dist/
 
-# Verbose mode (shows progress)
-js-analyzer --verbose src/**/*.js
+# Verbose mode (shows progress and file count)
+js-analyzer --verbose src/
 
 # Combine flags
-js-analyzer --pretty --verbose bundle.js
+js-analyzer --pretty --verbose --no-recursive bundle/
 ```
 
 ### Help & Version

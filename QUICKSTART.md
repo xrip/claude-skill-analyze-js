@@ -52,33 +52,45 @@ js-analyzer bundle.js
 }
 ```
 
-### 2. Pretty Print Output
+### 2. Analyze a Directory
 
 ```bash
-js-analyzer --pretty app.js
+# Recursive scan (default)
+js-analyzer src/
+
+# Non-recursive (top-level only)
+js-analyzer --no-recursive dist/
 ```
 
-### 3. Multiple Files with Verbose Mode
+### 3. Pretty Print Output
 
 ```bash
-js-analyzer --verbose --pretty main.js vendor.js config.js
+js-analyzer --pretty dist/
+```
+
+### 4. Multiple Paths with Verbose Mode
+
+```bash
+js-analyzer --verbose --pretty frontend/ backend/ utils.js
 ```
 
 **Output:**
 ```
-Analyzing: main.js
+Found 24 JavaScript file(s) to analyze
+Analyzing: frontend/app.js
   Found 12 items
-Analyzing: vendor.js
+Analyzing: frontend/config.js
   Found 3 items
-Analyzing: config.js
+Analyzing: backend/server.js
   Found 7 items
+...
 {
   "summary": { "total": 22, ... },
   ...
 }
 ```
 
-### 4. Analyze Downloaded JS
+### 5. Analyze Downloaded JS
 
 ```bash
 # Download and analyze
@@ -87,11 +99,12 @@ js-analyzer temp.js
 rm temp.js
 ```
 
-### 5. With Claude Code Skill
+### 6. With Claude Code Skill
 
 ```bash
 # In Claude Code, simply use:
-analyze-js dist/bundle.js
+analyze-js dist/
+analyze-js src/ lib/
 ```
 
 ## Claude Code Integration
