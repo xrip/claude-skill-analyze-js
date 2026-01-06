@@ -6,6 +6,7 @@
  */
 
 import { JSAnalyzer } from '../lib/analyzer.js';
+import { formatAsToon } from '../lib/toon-formatter.js';
 import { readFileSync, existsSync, statSync, readdirSync } from 'fs';
 import { basename, join, relative } from 'path';
 
@@ -76,6 +77,7 @@ OPTIONS:
   -v, --version        Show version
   --verbose            Show detailed analysis progress
   --pretty             Pretty print JSON output
+  --format=FORMAT      Output format: json (default), toon
   --no-recursive       Don't scan directories recursively
 
 EXAMPLES:
@@ -84,6 +86,7 @@ EXAMPLES:
   js-analyzer dist/ lib/                # Analyze multiple directories
   js-analyzer --no-recursive src/       # Only top-level files in src/
   js-analyzer --pretty --verbose dist/  # Verbose with pretty output
+  js-analyzer --format=toon src/        # Output in TOON format
 
 OUTPUT:
   JSON format with findings grouped by category
@@ -114,6 +117,7 @@ async function main() {
   let verbose = false;
   let pretty = false;
   let recursive = true;
+  let format = 'json';
 
   for (const arg of args) {
     if (arg === '-h' || arg === '--help') {
@@ -128,6 +132,12 @@ async function main() {
       pretty = true;
     } else if (arg === '--no-recursive') {
       recursive = false;
+    } else if (arg.startsWith('--format=')) {
+      format = arg.split('=')[1].toLowerCase();
+      if (format !== 'json' && format !== 'toon') {
+        console.error(`Error: Unknown format '${format}'. Supported formats: json, toon`);
+        process.exit(1);
+      }
     } else if (!arg.startsWith('-')) {
       paths.push(arg);
     } else {
@@ -211,12 +221,17 @@ async function main() {
   results.summary = analyzer.getStats();
   results.findings = analyzer.getFindingsByCategory();
 
-  // Output JSON
-  const json = pretty
-    ? JSON.stringify(results, null, 2)
-    : JSON.stringify(results);
-
-  console.log(json);
+  // Output in requested format
+  if (format === 'toon') {
+    const toon = formatAsToon(results);
+    console.log(toon);
+  } else {
+    // JSON format
+    const json = pretty
+      ? JSON.stringify(results, null, 2)
+      : JSON.stringify(results);
+    console.log(json);
+  }
 
   // Exit with error code if no findings
   process.exit(results.summary.total > 0 ? 0 : 0);

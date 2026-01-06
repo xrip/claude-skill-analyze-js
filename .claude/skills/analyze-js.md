@@ -37,9 +37,19 @@ js-analyzer [OPTIONS] <paths...>
 
 - `--verbose` - Show detailed progress and file count during analysis
 - `--pretty` - Pretty print JSON output for readability
+- `--format=FORMAT` - Output format: `json` (default) or `toon`
 - `--no-recursive` - Don't scan directories recursively (top-level files only)
 - `-h, --help` - Show help message
 - `-v, --version` - Show version
+
+### TOON Format
+
+TOON (Token-Oriented Object Notation) is optimized for LLM consumption:
+- Uses 40-50% fewer tokens than JSON
+- Tabular arrays for compact representation
+- Explicit array lengths for easier parsing
+
+Example: `analyze-js --format=toon src/`
 
 ## Output Format
 

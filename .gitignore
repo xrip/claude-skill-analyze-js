@@ -21,6 +21,14 @@ Thumbs.db
 
 # Test files
 test-sample.js
+test-complex.js
+test-dir/
+example-positions.js
+
+# Output files
+*.toon
+output.json
+example-output.toon
 
 # Logs
 *.log

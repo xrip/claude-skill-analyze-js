@@ -88,9 +88,46 @@ js-analyzer --pretty dist/
 # Verbose mode (shows progress and file count)
 js-analyzer --verbose src/
 
+# TOON format output (optimized for LLMs)
+js-analyzer --format=toon src/
+
 # Combine flags
 js-analyzer --pretty --verbose --no-recursive bundle/
 ```
+
+### Output Formats
+
+**JSON (default):**
+```bash
+js-analyzer --pretty app.js
+```
+
+**TOON (Token-Oriented Object Notation):**
+```bash
+js-analyzer --format=toon app.js
+```
+
+TOON format is optimized for Large Language Models (LLMs) with:
+- ~40-50% fewer tokens than JSON (typically 50% smaller file size)
+- Tabular arrays for compact representation
+- Human-readable structure
+- Explicit array lengths
+
+Example TOON output:
+```toon
+# JS Analyzer Results
+summary:
+  total: 13
+  endpoints: 4
+  urls: 1
+
+findings:
+  endpoints[4]{value,source,line,column}:
+    /api/v1/users,app.js,5,12
+    /graphql,app.js,9,14
+```
+
+Learn more: [TOON Format](https://github.com/toon-format/toon)
 
 ### Help & Version
 

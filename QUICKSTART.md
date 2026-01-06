@@ -105,7 +105,44 @@ rm temp.js
 # In Claude Code, simply use:
 analyze-js dist/
 analyze-js src/ lib/
+analyze-js --format=toon src/  # TOON format for LLMs
 ```
+
+## Output Formats
+
+### JSON (Default)
+
+Standard JSON output with all details:
+```bash
+js-analyzer --pretty app.js
+```
+
+### TOON Format
+
+Token-efficient format optimized for Large Language Models:
+```bash
+js-analyzer --format=toon app.js
+```
+
+**Benefits of TOON:**
+- 40-50% fewer tokens than JSON
+- Compact tabular arrays
+- Easy for LLMs to parse
+- Human-readable
+
+**Example:**
+```toon
+# JS Analyzer Results
+summary:
+  total: 4
+  endpoints: 1
+
+findings:
+  endpoints[1]{value,source,line,column}:
+    /api/v1/users,app.js,5,12
+```
+
+Read more: [TOON Format Specification](https://github.com/toon-format/toon)
 
 ## Claude Code Integration
 
