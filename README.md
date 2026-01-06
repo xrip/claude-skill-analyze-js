@@ -9,6 +9,7 @@ Command-line tool for analyzing JavaScript files to find API endpoints, secrets,
 - **Secret Detection**: AWS keys, Google API keys, Stripe tokens, GitHub tokens, JWT, private keys, database credentials
 - **Email Discovery**: Valid email addresses (filters test/placeholder emails)
 - **File References**: Sensitive files (.env, .key, .pem, configs, backups, certificates)
+- **Bundler Detection**: Identifies bundlers and their versions (Webpack, Vite, Rollup, Parcel, esbuild, Browserify, Turbopack, SWC, Metro, and more)
 - **Noise Filtering**: Removes build artifacts, module imports, XML namespaces, and other false positives
 - **Deduplication**: Tracks seen values across multiple files
 
@@ -167,14 +168,16 @@ The tool outputs JSON with three main sections:
     "urls": 2,
     "secrets": 3,
     "emails": 2,
-    "files": 2
+    "files": 2,
+    "bundlers": 0
   },
   "findings": {
     "endpoints": [...],
     "urls": [...],
     "secrets": [...],
     "emails": [...],
-    "files": [...]
+    "files": [...],
+    "bundlers": [...]
   }
 }
 ```
@@ -182,7 +185,7 @@ The tool outputs JSON with three main sections:
 ### Finding Object Structure
 
 Each finding includes:
-- **category**: Type of finding (endpoints, urls, secrets, emails, files)
+- **category**: Type of finding (endpoints, urls, secrets, emails, files, bundlers)
 - **value**: The detected value
 - **source**: Source filename
 - **position**: Location in file
@@ -214,6 +217,7 @@ This allows easy navigation to POI (Points of Interest) in your editor:
 - **secrets**: API keys, tokens, credentials (masked for safety)
 - **emails**: Email addresses
 - **files**: References to sensitive file types
+- **bundlers**: JavaScript bundlers and their versions (Webpack, Vite, Rollup, Parcel, esbuild, etc.)
 
 ## Claude Code Integration
 
