@@ -1,7 +1,7 @@
 
 ---
 name: analyze-js
-description: Analyze JavaScript files and directories for API endpoints, secrets, URLs, emails, and sensitive file references
+description: Analyze JavaScript files and directories for API endpoints, secrets, URLs, emails, sensitive file references, and bundler versions
 examples:
   - analyze-js bundle.js
   - analyze-js src/
@@ -25,6 +25,7 @@ Analyzes JavaScript files and directories for security-relevant information:
 - **Secrets**: API keys, tokens, JWT, private keys, database credentials
 - **Emails**: Email addresses (excluding test/placeholder addresses)
 - **Files**: References to sensitive files (.env, .key, configs, backups)
+- **Bundlers**: JavaScript bundlers and their versions (Webpack, Vite, Rollup, Parcel, esbuild, Browserify, Turbopack, SWC, Metro, and more)
 
 The tool filters out common noise (build artifacts, module imports, XML namespaces) to provide high-signal results.
 
@@ -72,7 +73,7 @@ bun bin/cli.js --no-recursive build/
 ## Output Structure
 
 Each finding includes:
-- **category**: endpoints, urls, secrets, emails, or files
+- **category**: endpoints, urls, secrets, emails, files, or bundlers
 - **value**: The detected value
 - **source**: Source file path
 - **position**: Line and column number (1-indexed)
@@ -86,6 +87,19 @@ Example:
   "position": {
     "line": 42,
     "column": 15
+  }
+}
+```
+
+Bundler detection example:
+```json
+{
+  "category": "bundlers",
+  "value": "Webpack 5.88.2",
+  "source": "bundle.js",
+  "position": {
+    "line": 1,
+    "column": 25
   }
 }
 ```
