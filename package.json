@@ -1,7 +1,7 @@
 {
   "name": "js-analyzer-cli",
   "version": "1.0.0",
-  "description": "JavaScript analyzer for finding API endpoints, secrets, URLs, and sensitive data. Usable as Claude Skill",
+  "description": "JavaScript analyzer for finding API endpoints, secrets, URLs, sensitive data, and bundler versions. Usable as Claude Code skill",
   "type": "module",
   "main": "./lib/analyzer.js",
   "bin": {
@@ -25,7 +25,13 @@
     "pentesting",
     "toon",
     "llm",
-    "static-analysis"
+    "static-analysis",
+    "bundler-detection",
+    "webpack",
+    "vite",
+    "rollup",
+    "claude-code",
+    "claude-skill"
   ],
   "repository": {
     "type": "git",

@@ -9,13 +9,28 @@ examples:
   - analyze-js --verbose --no-recursive build/
 ---
 
-When the user invokes this skill, run the JS analyzer tool located in this project.
+When the user invokes this skill, run the JS analyzer tool.
 
 ## Command to Execute
 
+**Option 1: Local development (in this project):**
 ```bash
 bun bin/cli.js [OPTIONS] <paths...>
 ```
+
+**Option 2: Using bunx (recommended for any project):**
+```bash
+bunx --bun js-analyzer-cli [OPTIONS] <paths...>
+```
+
+**Option 3: Using npx (Node.js):**
+```bash
+npx js-analyzer-cli [OPTIONS] <paths...>
+```
+
+**Detection priority:**
+1. If `bin/cli.js` exists locally → use local version
+2. Otherwise → use `bunx --bun js-analyzer-cli` for global/remote execution
 
 ## What This Tool Does
 
@@ -39,7 +54,9 @@ When the user requests to analyze JavaScript files:
    - `--format=json` - Use JSON format instead of default TOON
    - `--pretty` - Pretty print JSON output (only with --format=json)
    - `--no-recursive` - Don't scan directories recursively
-3. Run: `bun bin/cli.js [flags] <paths>`
+3. Choose execution method:
+   - **Local**: `bun bin/cli.js [flags] <paths>` (if in this project)
+   - **Remote**: `bunx --bun js-analyzer-cli [flags] <paths>` (any project)
 4. Parse and present the results to the user
 
 **Directory Scanning:**
@@ -53,6 +70,7 @@ When the user requests to analyze JavaScript files:
 
 ## Example Commands
 
+**Local development (in this project):**
 ```bash
 # Analyze single file (TOON format by default)
 bun bin/cli.js bundle.js
@@ -68,6 +86,25 @@ bun bin/cli.js --format=json --pretty src/
 
 # Non-recursive scan
 bun bin/cli.js --no-recursive build/
+```
+
+**Using bunx (works in any project):**
+```bash
+# Analyze single file
+bunx --bun js-analyzer-cli bundle.js
+
+# Analyze with options
+bunx --bun js-analyzer-cli --verbose --format=json --pretty src/
+
+# Multiple directories
+bunx --bun js-analyzer-cli frontend/ backend/
+```
+
+**Using npx (Node.js alternative):**
+```bash
+# Same commands work with npx
+npx js-analyzer-cli bundle.js
+npx js-analyzer-cli --verbose src/
 ```
 
 ## Output Structure
