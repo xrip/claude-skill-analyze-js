@@ -8,6 +8,16 @@ examples:
   - analyze-js --verbose --no-recursive build/
 ---
 
+When the user invokes this skill, run the JS analyzer tool located in this project.
+
+## Command to Execute
+
+```bash
+bun bin/cli.js [OPTIONS] <paths...>
+```
+
+## What This Tool Does
+
 Analyzes JavaScript files and directories for security-relevant information:
 - **API Endpoints**: REST APIs, GraphQL, OAuth paths, admin panels
 - **URLs**: External links, cloud storage URLs, WebSocket connections
@@ -17,48 +27,53 @@ Analyzes JavaScript files and directories for security-relevant information:
 
 The tool filters out common noise (build artifacts, module imports, XML namespaces) to provide high-signal results.
 
-## Usage
+## Usage Instructions
 
-```bash
-js-analyzer [OPTIONS] <paths...>
-```
+When the user requests to analyze JavaScript files:
 
-**Paths can be:**
-- Individual files: `app.js`
-- Directories: `src/` (scanned recursively by default)
-- Multiple paths: `frontend/ backend/ utils.js`
+1. Identify the paths (files or directories) to analyze
+2. Determine if any special flags are needed:
+   - `--verbose` - Show detailed progress
+   - `--pretty` - Pretty print JSON output
+   - `--format=toon` - Use TOON format (optimized for LLMs, 50% smaller)
+   - `--no-recursive` - Don't scan directories recursively
+3. Run: `bun bin/cli.js [flags] <paths>`
+4. Parse and present the results to the user
 
 **Directory Scanning:**
 - Automatically finds `.js`, `.jsx`, `.mjs` files
 - Skips `node_modules/` and hidden directories
-- Use `--no-recursive` to scan only top-level files
+- Recursive by default
 
-## Options
+**Output Formats:**
+- `json` (default) - Full JSON with all details
+- `toon` - Compact format optimized for LLMs (40-50% fewer tokens)
 
-- `--verbose` - Show detailed progress and file count during analysis
-- `--pretty` - Pretty print JSON output for readability
-- `--format=FORMAT` - Output format: `json` (default) or `toon`
-- `--no-recursive` - Don't scan directories recursively (top-level files only)
-- `-h, --help` - Show help message
-- `-v, --version` - Show version
+## Example Commands
 
-### TOON Format
+```bash
+# Analyze single file
+bun bin/cli.js bundle.js
 
-TOON (Token-Oriented Object Notation) is optimized for LLM consumption:
-- Uses 40-50% fewer tokens than JSON
-- Tabular arrays for compact representation
-- Explicit array lengths for easier parsing
+# Analyze directory with TOON format
+bun bin/cli.js --format=toon src/
 
-Example: `analyze-js --format=toon src/`
+# Verbose analysis of multiple directories
+bun bin/cli.js --verbose --pretty frontend/ backend/
 
-## Output Format
+# Non-recursive scan
+bun bin/cli.js --no-recursive build/
+```
 
-Returns JSON with:
-- `files[]`: Status of each analyzed file
-- `summary`: Count of findings by category
-- `findings{}`: Detailed findings grouped by category (endpoints, urls, secrets, emails, files)
+## Output Structure
 
-Each finding includes position information:
+Each finding includes:
+- **category**: endpoints, urls, secrets, emails, or files
+- **value**: The detected value
+- **source**: Source file path
+- **position**: Line and column number (1-indexed)
+
+Example:
 ```json
 {
   "category": "endpoints",
@@ -71,39 +86,12 @@ Each finding includes position information:
 }
 ```
 
-The `position` field allows easy navigation to POI (Points of Interest):
-- Line number (1-indexed)
-- Column number (1-indexed)
-- Compatible with editor jump-to-location formats (e.g., `app.js:42:15`)
-
-## Examples
-
-Analyze a single bundled JS file:
-```bash
-analyze-js dist/bundle.js
-```
-
-Analyze entire directory recursively:
-```bash
-analyze-js src/
-```
-
-Analyze multiple directories:
-```bash
-analyze-js --verbose --pretty frontend/ backend/
-```
-
-Non-recursive directory scan:
-```bash
-analyze-js --no-recursive build/
-```
+Position info allows easy navigation: `app.js:42:15`
 
 ## Security Note
 
-This tool is designed for **authorized security testing** only:
+This tool is for **authorized security testing** only:
 - Penetration testing with proper authorization
 - Bug bounty programs
 - Security research on your own applications
 - Code review and security audits
-
-Do not use on applications you do not own or have permission to test.
