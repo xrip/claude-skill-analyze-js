@@ -1,6 +1,6 @@
 # JS Analyzer CLI
 
-Command-line tool for analyzing JavaScript files to find API endpoints, secrets, URLs, emails, and sensitive file references. Ported from Burp Suite JS Analyzer extension.
+Command-line tool for analyzing JavaScript files to find API endpoints, secrets, URLs, emails, sensitive file references, and bundler information. Ported from Burp Suite JS Analyzer extension.
 
 ## Features
 
@@ -318,6 +318,58 @@ js-analyzer --pretty test.js
   }
 }
 ```
+
+## Bundler Detection
+
+The tool can detect JavaScript bundlers and their versions in compiled/bundled code:
+
+### Supported Bundlers
+
+- **Webpack** - Detects version strings and runtime signatures (`__webpack_require__`, `__webpack_modules__`, `webpackJsonp`)
+- **Vite** - Detects version strings and `__vite__` runtime signature
+- **Rollup** - Detects version from comments (e.g., `/*** Rollup (3.26.0) ***/`)
+- **Parcel** - Detects version strings and `__parcel__` runtime signature
+- **esbuild** - Detects version from comments (e.g., `/* esbuild 0.18.11 */`)
+- **Browserify** - Detects version strings
+- **Turbopack** - Detects version strings
+- **SWC** - Detects `@swc/core` version strings
+- **Metro** - Detects Metro bundler (React Native)
+- **FuseBox** - Detects version strings
+- **Snowpack** - Detects version strings
+- **WMR** - Detects version strings
+
+### Example Output
+
+```json
+{
+  "category": "bundlers",
+  "value": "Webpack 5.88.2",
+  "source": "bundle.js",
+  "position": {
+    "line": 1,
+    "column": 25
+  }
+}
+```
+
+For runtime signatures without explicit versions:
+```json
+{
+  "category": "bundlers",
+  "value": "Webpack (detected)",
+  "source": "app.js",
+  "position": {
+    "line": 42,
+    "column": 5
+  }
+}
+```
+
+This is useful for:
+- Security assessment (identifying outdated bundler versions)
+- Technology fingerprinting
+- Build process analysis
+- Understanding minified/bundled code
 
 ## Noise Filtering
 
