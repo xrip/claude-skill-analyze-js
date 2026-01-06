@@ -8,7 +8,7 @@ A Claude Code skill is a reusable command that you can invoke in Claude Code con
 
 ## Quick Start (No Installation Required)
 
-### Option 1: Use bunx (Recommended)
+### Option 1: Use npx (Works everywhere)
 
 Just copy the skill file to your project:
 
@@ -25,10 +25,18 @@ That's it! Now you can use `analyze-js` in Claude Code:
 
 ```
 User: analyze-js dist/bundle.js
-Claude: [Analyzes the file using bunx --bun js-analyzer-cli]
+Claude: [Analyzes the file using npx js-analyzer-cli]
 ```
 
-The skill will automatically download and run the analyzer when needed (via bunx).
+The skill will automatically download and run the analyzer when needed (via npx).
+
+**Recommended: Use bunx for faster execution:**
+
+The skill supports both `npx` and `bunx`. If you have Bun installed, bunx is significantly faster:
+- First run: npx ~2-3s, bunx ~0.5s
+- Subsequent runs: both are instant (cached)
+
+To use bunx, just install Bun: `curl -fsSL https://bun.sh/install | bash`
 
 ### Option 2: Install Globally
 
@@ -100,14 +108,16 @@ Claude: Found:
 - 12 API endpoints
 - 2 AWS keys (masked: AKIA...MPLE)
 - Webpack 5.75.0
-- Admin endpoint: /admin/users
+- Admin endpoint: /admin/users at main.js:234:12
+
+Click on main.js:234:12 to navigate directly to the finding.
 ```
 
 ### Technology Stack Discovery
 ```
 User: What bundler is this app using?
 Claude: [Runs analyze-js]
-Found: Vite 4.3.9 and Rollup 3.26.0
+Found: Vite 4.3.9 at bundle.js:1:15 and Rollup 3.26.0 at bundle.js:3:20
 ```
 
 ### Multiple Files
@@ -115,7 +125,7 @@ Found: Vite 4.3.9 and Rollup 3.26.0
 User: analyze-js src/ public/js/
 Claude: Scanning 45 files...
 Total findings: 67
-- Endpoints: 23
+- Endpoints: 23 (locations in TOON format with file:line:column)
 - Secrets: 4
 - Bundlers: Webpack 5.88.2
 ```

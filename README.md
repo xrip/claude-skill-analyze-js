@@ -34,12 +34,19 @@ Command-line tool for analyzing JavaScript files to find API endpoints, secrets,
 
 ## Installation
 
-### Option 1: Use with bunx (Recommended)
+### Option 1: Use with npx (Works everywhere)
 
 Run directly without installation:
 ```bash
-bunx js-analyzer-cli <files>
+npx js-analyzer-cli <files>
 ```
+
+**Recommended: Use bunx for faster execution:**
+```bash
+bunx --bun js-analyzer-cli <files>
+```
+
+> **Why bunx?** It's significantly faster than npx and uses the Bun runtime for better performance.
 
 ### Option 2: Global Installation
 
@@ -132,24 +139,37 @@ js-analyzer app.js
 
 TOON format is the default output, optimized for Large Language Models (LLMs) with:
 - ~40-50% fewer tokens than JSON (typically 50% smaller file size)
-- Tab-delimited tabular arrays for optimal tokenization
+- Compact `file:line:column` location format
+- Tab-delimited columns for optimal tokenization
 - Human-readable structure
 - Explicit array lengths
 - Official `@toon-format/toon` library
 
 Example TOON output:
-```toon
-# JS Analyzer Results
+```
+__comment: "JS Analyzer Results - Generated: 2026-01-06T20:45:12.345Z"
 summary:
   total: 13
   endpoints: 4
   urls: 1
+  secrets: 0
+  emails: 0
+  files: 0
+  bundlers: 1
 
 findings:
-  endpoints[4	]{value	source	line	column}:
-    /api/v1/users	app.js	5	12
-    /graphql	app.js	9	14
+  endpoints[4	]{value	location}:
+    /api/v1/users	app.js:42:15
+    /api/v1/posts	app.js:58:23
+    /oauth/token	app.js:105:18
+    /graphql	app.js:9:14
+  urls[1	]{value	location}:
+    https://api.example.com	app.js:67:20
+  bundlers[1	]{value	location}:
+    Webpack 5.88.2	app.js:1:15
 ```
+
+**Location format**: `file:line:column` - click to navigate in most IDEs and terminals.
 
 Learn more: [TOON Format](https://github.com/toon-format/toon)
 
@@ -203,6 +223,8 @@ The tool outputs JSON with three main sections:
 
 ### Finding Object Structure
 
+**JSON Format:**
+
 Each finding includes:
 - **category**: Type of finding (endpoints, urls, secrets, emails, files, bundlers)
 - **value**: The detected value
@@ -224,9 +246,21 @@ Example finding:
 }
 ```
 
+**TOON Format (default):**
+
+Uses compact `file:line:column` notation:
+```
+endpoints[4	]{value	location}:
+  /api/v1/users	app.js:42:15
+  /api/v1/posts	app.js:58:23
+  /oauth/token	app.js:105:18
+  /admin/dashboard	app.js:234:12
+```
+
 This allows easy navigation to POI (Points of Interest) in your editor:
-- VS Code: `app.js:42:15`
-- Vim: `:42` then `15|`
+- VS Code: Click on `app.js:42:15`
+- Vim: `:e app.js | :42 | norm 15|`
+- Terminal: Most modern terminals auto-detect and make it clickable
 - Claude Code: Click on `app.js:42`
 
 ### Categories
@@ -317,10 +351,10 @@ Found: Vite 4.3.9 and Rollup 3.26.0
 
 The skill provides:
 - **Summary statistics** - Total findings by category
-- **Detailed findings** - All discovered items with positions
+- **Detailed findings** - All discovered items with `file:line:column` locations
 - **Bundler information** - Detected build tools and versions
 - **Security insights** - Highlighted sensitive data
-- **Navigation hints** - Line:column references for quick access
+- **Navigation hints** - Click to jump to exact location
 
 Example output:
 ```
@@ -333,13 +367,12 @@ Summary:
 - Bundlers: Webpack 5.88.2
 
 🔴 Critical Findings:
-- AWS Key found at line 1247
-- Private API key at line 3891
-- Admin endpoint: /admin/users
+• AWS Key found at bundle.js:1247:15
+• Private API key at bundle.js:3891:22
+• Admin endpoint: /admin/users at bundle.js:234:12
 
 🔧 Build Info:
-- Webpack 5.88.2 (bundler)
-- Built with production mode
+• Webpack 5.88.2 detected at bundle.js:1:15
 ```
 
 ### Advanced Usage
