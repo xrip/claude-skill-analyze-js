@@ -2,6 +2,25 @@
 
 Command-line tool for analyzing JavaScript files to find API endpoints, secrets, URLs, emails, sensitive file references, and bundler information. Ported from Burp Suite JS Analyzer extension.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Output Formats](#output-formats)
+- [Bundler Detection](#bundler-detection)
+- [Claude Code Integration](#claude-code-integration)
+  - [What is a Claude Code Skill?](#what-is-a-claude-code-skill)
+  - [Usage as Skill](#usage-as-skill)
+  - [Common Use Cases](#common-use-cases)
+  - [Using the Skill in Other Projects](#using-the-skill-in-other-projects)
+- [Example](#example)
+- [Noise Filtering](#noise-filtering)
+- [Security Notice](#security-notice)
+- [Architecture](#architecture)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - **API Endpoints Detection**: REST APIs, GraphQL, OAuth paths, admin panels, sensitive paths
@@ -221,24 +240,227 @@ This allows easy navigation to POI (Points of Interest) in your editor:
 
 ## Claude Code Integration
 
-This tool includes a Claude Code skill for easy integration.
+This tool includes a Claude Code skill for seamless integration with Claude CLI.
+
+### What is a Claude Code Skill?
+
+Claude Code skills are reusable commands that you can invoke directly in conversations with Claude. This project includes an `analyze-js` skill that makes it easy to analyze JavaScript files without typing the full command.
+
+### Installation
+
+The skill is automatically available when you're in this project directory. Claude Code detects skills from the `.claude/skills/` directory.
+
+**Skill location:** `.claude/skills/analyze-js/SKILL.md`
 
 ### Usage as Skill
 
+Instead of typing the full command:
 ```bash
-# In Claude Code
-analyze-js bundle.js
-analyze-js --verbose src/app.js
+bun bin/cli.js --verbose src/app.js
 ```
 
-The skill is defined in `.claude/skills/analyze-js.md` and automatically available in projects with this tool.
+You can simply use:
+```bash
+analyze-js src/app.js
+```
 
-### Skill Features
+Or even more naturally in Claude Code conversation:
+```
+User: analyze-js bundle.js
+User: analyze-js --verbose dist/
+User: analyze-js frontend/ backend/
+```
 
-- Structured JSON output for easy parsing
-- Automatic filtering of noise
-- Security-focused analysis
-- Works with downloaded JS files
+### Skill Capabilities
+
+When you invoke the skill, Claude will:
+
+1. **Execute the analyzer** on the specified files/directories
+2. **Parse the results** automatically (TOON or JSON format)
+3. **Present findings** in a structured, readable format
+4. **Highlight important discoveries** like secrets, sensitive endpoints
+5. **Provide context** about what was found and why it matters
+
+### Common Use Cases
+
+**1. Analyzing downloaded JavaScript files:**
+```
+User: I downloaded bundle.js from example.com. Can you analyze it?
+Claude: [Uses analyze-js to scan bundle.js]
+Claude: Found 23 endpoints, 5 secrets, and identified Webpack 5.88.2...
+```
+
+**2. Security audit:**
+```
+User: analyze-js dist/main.js
+Claude: Analyzing... Found:
+- 12 API endpoints (including /admin/users)
+- 2 AWS keys (AKIA...)
+- Webpack 5.75.0 (note: vulnerable version)
+```
+
+**3. Multiple directories:**
+```
+User: analyze-js src/ public/js/
+Claude: Scanning 45 files...
+Summary: 67 findings across 2 directories
+```
+
+**4. Technology fingerprinting:**
+```
+User: What bundler and version is this app using?
+Claude: [Uses analyze-js]
+Found: Vite 4.3.9 and Rollup 3.26.0
+```
+
+### Skill Output
+
+The skill provides:
+- **Summary statistics** - Total findings by category
+- **Detailed findings** - All discovered items with positions
+- **Bundler information** - Detected build tools and versions
+- **Security insights** - Highlighted sensitive data
+- **Navigation hints** - Line:column references for quick access
+
+Example output:
+```
+📊 Analysis Results for bundle.js
+
+Summary:
+- Total findings: 28
+- Endpoints: 12
+- Secrets: 3 (masked)
+- Bundlers: Webpack 5.88.2
+
+🔴 Critical Findings:
+- AWS Key found at line 1247
+- Private API key at line 3891
+- Admin endpoint: /admin/users
+
+🔧 Build Info:
+- Webpack 5.88.2 (bundler)
+- Built with production mode
+```
+
+### Advanced Usage
+
+**Combining with other Claude capabilities:**
+
+```
+User: Download the JS from https://example.com/app.js and analyze it
+Claude: [Downloads file]
+Claude: [Runs analyze-js app.js]
+Claude: Here's what I found...
+
+User: analyze-js dist/ and create a security report
+Claude: [Analyzes all JS files]
+Claude: [Generates detailed security report with findings]
+```
+
+**With specific flags:**
+```
+User: analyze-js --format=json --pretty bundle.js
+Claude: [Returns formatted JSON for further processing]
+
+User: analyze-js --verbose --no-recursive build/
+Claude: [Scans only top-level files with progress details]
+```
+
+### Skill Configuration
+
+The skill is configured in `.claude/skills/analyze-js/SKILL.md`:
+
+```yaml
+---
+name: analyze-js
+description: Analyze JavaScript files for API endpoints, secrets, URLs, emails,
+             sensitive files, and bundler versions
+examples:
+  - analyze-js bundle.js
+  - analyze-js src/
+  - analyze-js --verbose dist/
+---
+```
+
+You can customize:
+- **name**: The command you type
+- **description**: What Claude shows in skill suggestions
+- **examples**: Sample usage patterns
+
+### Benefits of Using the Skill
+
+✅ **Faster**: Type `analyze-js` instead of full command path
+✅ **Context-aware**: Claude understands the results and provides insights
+✅ **Integrated**: Works seamlessly with other Claude Code features
+✅ **Smart parsing**: Claude interprets findings and highlights important items
+✅ **Interactive**: Ask follow-up questions about findings
+✅ **Automated workflows**: Combine with downloads, reports, and other tasks
+
+### Troubleshooting
+
+**Skill not found:**
+```bash
+# Verify you're in the project directory
+pwd
+
+# Check skill file exists
+ls .claude/skills/analyze-js/SKILL.md
+
+# Restart Claude Code if needed
+```
+
+**Permission issues:**
+```bash
+# Ensure Bun is installed
+bun --version
+
+# Make CLI executable (Unix/Mac)
+chmod +x bin/cli.js
+```
+
+### Using the Skill in Other Projects
+
+You can use this skill in any project by either:
+
+**Option 1: Install globally and symlink the skill**
+```bash
+# Install the tool globally
+bun install -g js-analyzer-cli
+
+# Create skill directory in your project
+mkdir -p .claude/skills/analyze-js
+
+# Copy the skill file
+cp /path/to/tools/.claude/skills/analyze-js/SKILL.md .claude/skills/analyze-js/
+
+# Update the command path in SKILL.md to use global installation:
+# Change: bun bin/cli.js
+# To: js-analyzer
+```
+
+**Option 2: Reference this project's skill**
+```bash
+# In your project's .claude/skills/ directory
+ln -s /path/to/tools/.claude/skills/analyze-js ./analyze-js
+```
+
+**Option 3: Use bunx (no installation needed)**
+
+Modify the skill file to use `bunx`:
+```yaml
+---
+name: analyze-js
+description: Analyze JavaScript files...
+---
+
+## Command to Execute
+
+```bash
+bunx js-analyzer-cli [OPTIONS] <paths...>
+```
+```
+
+This way, the skill works in any project without local installation.
 
 ## Example
 
