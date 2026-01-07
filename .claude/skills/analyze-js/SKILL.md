@@ -46,69 +46,46 @@ Default behavior:
 
 ## Output Format
 
-**TOON (default)** - Compact, optimized for LLMs (50% smaller than JSON):
+TOON format (default) - compact, LLM-optimized:
 ```
 summary:
   total: 18
   endpoints: 4
   secrets: 1
-  bundlers: 2
 findings:
   endpoints[4	]{value	location}:
     /api/v1/users	bundle.js:42:15
     /admin/dashboard	bundle.js:234:12
   secrets[1	]{value	location}:
     AKIA...MPLE (AWS Key)	bundle.js:312:25
-  bundlers[2	]{value	location}:
-    Webpack 5.88.2	bundle.js:1:15
 ```
 
-**JSON** (with `--format=json`):
-```json
-{
-  "summary": {"total": 18, "endpoints": 4, ...},
-  "findings": {
-    "endpoints": [
-      {"value": "/api/v1/users", "source": "bundle.js", "position": {"line": 42, "column": 15}}
-    ]
-  }
-}
-```
+Location format: `file:line:column` (clickable in IDEs)
 
 ## How to Present Results
 
-1. **Summary** - Total + counts per category
-2. **Critical items** - Secrets, admin endpoints with locations
-3. **Grouped findings** - By category, preserve `file:line:column` format
+Start with summary, highlight critical findings (secrets, admin endpoints), group by category.
 
-Example presentation:
+Example:
 ```
-📊 Analysis: bundle.js
-
-Summary: 18 findings
-- 4 endpoints (⚠️ includes /admin/dashboard)
-- 1 secret (AWS Key - masked)
-- Webpack 5.88.2
+📊 Analysis: bundle.js (18 findings)
 
 🔴 Critical:
 • AWS Key at bundle.js:312:25
 • Admin endpoint at bundle.js:234:12
 
-📍 Endpoints (4):
-• /api/v1/users (bundle.js:42:15)
-• /admin/dashboard (bundle.js:234:12)
+Endpoints (4): /api/v1/users (bundle.js:42:15), /admin/dashboard (bundle.js:234:12), ...
+Bundler: Webpack 5.88.2
 ```
-
-Use `file:line:column` format - clickable in most IDEs.
 
 ## Usage Flow
 
-1. Identify paths to analyze
-2. Add flags if needed (--verbose, --format=json, etc.)
+1. Identify paths
+2. Add flags if needed
 3. Run: `npx js-analyzer-cli [flags] <paths>`
-4. Parse and present results
+4. Parse and present
 
-**Note:** First run downloads package (~2-3s), subsequent runs are instant (cached).
+Note: First run downloads package (~2s), then cached.
 
 ## Security
 
