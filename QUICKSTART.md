@@ -1,116 +1,147 @@
 # JS Analyzer - Quick Start Guide
 
-## Installation
+**🤖 Primary use:** Claude Code Skill
+**⚙️ Alternative:** Standalone CLI tool
 
-### Option 1: bunx (No Installation Required)
+## Using as Claude Code Skill (Recommended)
 
-Run directly with bunx:
-```bash
-bunx js-analyzer-cli <files>
+### In this project (no setup needed)
+
+Just use it naturally in Claude Code:
+
+```
+User: analyze-js bundle.js
+User: analyze-js src/
+User: analyze-js --verbose dist/
 ```
 
-### Option 2: Global Installation
+Claude will:
+- Execute the analyzer
+- Parse TOON/JSON results
+- Highlight critical findings (secrets, admin endpoints)
+- Provide security context
+- Show clickable `file:line:column` locations
+
+### In other projects
+
+**Quick setup (npx - no installation):**
 
 ```bash
-# Install globally with bun
+# In your project directory
+mkdir -p .claude/skills/analyze-js
+
+# Download skill file
+curl -o .claude/skills/analyze-js/SKILL.md \
+  https://raw.githubusercontent.com/xrip/claude-skill-analyze-js/master/.claude/skills/analyze-js/SKILL.md
+```
+
+Done! The skill uses `npx js-analyzer-cli` which works without installation.
+
+**For better performance (bunx):**
+
+```bash
+# Edit .claude/skills/analyze-js/SKILL.md and change:
+bunx --bun js-analyzer-cli [OPTIONS] <paths...>
+```
+
+**For fastest execution (global install):**
+
+```bash
+# Install globally
+bun install -g js-analyzer-cli
+# or: npm install -g js-analyzer-cli
+
+# Edit .claude/skills/analyze-js/SKILL.md and use:
+js-analyzer [OPTIONS] <paths...>
+```
+
+### Example Usage
+
+**Security analysis:**
+```
+User: I downloaded bundle.js from example.com, can you analyze it?
+
+Claude: [Runs analyze-js bundle.js]
+Found 23 findings:
+- 🔴 2 AWS keys at bundle.js:1247:15 and bundle.js:2891:22
+- ⚠️ Admin endpoint /admin/users at bundle.js:234:12
+- 12 API endpoints
+- Webpack 5.88.2 detected
+```
+
+**Technology fingerprinting:**
+```
+User: analyze-js dist/app.js
+
+Claude: Detected build tools:
+- Vite 4.3.9
+- Rollup 3.26.0
+```
+
+**Combined workflows:**
+```
+User: Download JS from https://example.com/app.js and analyze it
+
+Claude: [Downloads file]
+Claude: [Runs analyze-js app.js]
+Claude: Found 15 items including 3 sensitive endpoints...
+
+User: Create a security report
+
+Claude: [Generates detailed report with recommendations]
+```
+
+## Standalone CLI Usage (Alternative)
+
+### Installation
+
+**Option 1: npx (no installation)**
+```bash
+npx js-analyzer-cli <files>
+```
+
+**Option 2: bunx (faster)**
+```bash
+bunx --bun js-analyzer-cli <files>
+```
+
+**Option 3: Global installation**
+```bash
+# With bun (recommended)
 bun install -g js-analyzer-cli
 
-# Now use anywhere
+# Or with npm
+npm install -g js-analyzer-cli
+
+# Then use:
 js-analyzer <files>
 ```
 
-### Option 3: Local Development
+### Quick Examples
 
-```bash
-# From project directory
-bun bin/cli.js <files>
-
-# Or install locally
-bun install -g .
-```
-
-## Quick Examples
-
-### 1. Analyze a Single File
-
+**Analyze a single file:**
 ```bash
 js-analyzer bundle.js
 ```
 
-**Output:**
-```json
-{
-  "summary": {
-    "total": 15,
-    "endpoints": 5,
-    "urls": 3,
-    "secrets": 2,
-    "emails": 3,
-    "files": 2
-  },
-  "findings": { ... }
-}
+**Analyze a directory (recursive):**
+```bash
+js-analyzer src/
 ```
 
-### 2. Analyze a Directory
-
+**Verbose mode with pretty JSON:**
 ```bash
-# Recursive scan (default)
-js-analyzer src/
+js-analyzer --verbose --pretty frontend/ backend/
+```
 
-# Non-recursive (top-level only)
+**Non-recursive scan:**
+```bash
 js-analyzer --no-recursive dist/
 ```
 
-### 3. Pretty Print Output
+### Output Formats
 
-```bash
-js-analyzer --pretty dist/
-```
-
-### 4. Multiple Paths with Verbose Mode
-
-```bash
-js-analyzer --verbose --pretty frontend/ backend/ utils.js
-```
-
-**Output:**
-```
-Found 24 JavaScript file(s) to analyze
-Analyzing: frontend/app.js
-  Found 12 items
-Analyzing: frontend/config.js
-  Found 3 items
-Analyzing: backend/server.js
-  Found 7 items
-...
-{
-  "summary": { "total": 22, ... },
-  ...
-}
-```
-
-### 5. Analyze Downloaded JS
-
-```bash
-# Download and analyze
-curl -s https://example.com/app.js -o temp.js
-js-analyzer temp.js
-rm temp.js
-```
-
-### 6. With Claude Code Skill
-
-```bash
-# In Claude Code, simply use:
-analyze-js dist/               # TOON format by default
-analyze-js src/ lib/
-analyze-js --format=json src/  # Switch to JSON if needed
-```
-
-## Output Formats
-
-### TOON Format (Default)
+**TOON Format (Default)**
 
 Token-efficient format optimized for Large Language Models:
 ```bash
