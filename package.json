@@ -1,11 +1,12 @@
 {
   "name": "js-analyzer-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Claude Code skill for JS static analysis - finds API endpoints, secrets, URLs, bundler versions. TOON format for LLMs. Also works as standalone CLI tool.",
   "type": "module",
   "main": "./lib/analyzer.js",
   "bin": {
-    "js-analyzer": "bin/cli.js"
+    "js-analyzer": "bin/cli.js",
+    "js-analyzer-cli": "bin/cli.js"
   },
   "files": [
     "bin/",
